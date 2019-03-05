@@ -81,18 +81,16 @@ public class SmsModule extends ReactContextBaseJavaModule /*implements LoaderMan
             JSONArray jsons = new JSONArray();
 
             while (cursor != null && cursor.moveToNext()) {
-                boolean matchFilter = false;
+                boolean matchFilter = true;
                 if (fid > -1)
-                    matchFilter = fid == cursor.getInt(cursor.getColumnIndex("_id"));
-                else if (fread > -1)
-                    matchFilter = fread == cursor.getInt(cursor.getColumnIndex("read"));
-                else if (faddress.length() > 0)
-                    matchFilter = faddress.equals(cursor.getString(cursor.getColumnIndex("address")).trim());
-                else if (fcontent.length() > 0)
-                    matchFilter = fcontent.equals(cursor.getString(cursor.getColumnIndex("body")).trim());
-                else {
-                    matchFilter = true;
-                }
+                    matchFilter &= fid == cursor.getInt(cursor.getColumnIndex("_id"));
+                if (fread > -1)
+                    matchFilter &= fread == cursor.getInt(cursor.getColumnIndex("read"));
+                if (faddress.length() > 0)
+                    matchFilter &= faddress.equals(cursor.getString(cursor.getColumnIndex("address")).trim());
+                if (fcontent.length() > 0)
+                    matchFilter &= fcontent.equals(cursor.getString(cursor.getColumnIndex("body")).trim());
+
                 if (matchFilter) {
                     if (c >= indexFrom) {
                         if (maxCount > 0 && c >= indexFrom + maxCount)
